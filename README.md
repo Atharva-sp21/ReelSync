@@ -4,6 +4,12 @@
 ![OpenAI](https://img.shields.io/badge/OpenAI-412991?style=for-the-badge&logo=openai&logoColor=white)
 ![Airtable](https://img.shields.io/badge/Airtable-18BFFF?style=for-the-badge&logo=airtable&logoColor=white)
 
+## 💡 The Problem & The Solution
+
+**The Problem:** In the era of short-form video, users save countless tutorials, tech tools, and inspiring content daily. However, native social media apps offer terrible organization tools. Saved videos pile up in an unsearchable, chaotic list, making it nearly impossible to retrieve that one specific recipe or coding tool when you actually need it.
+
+**The Solution:** ReelSync transforms chaotic social media consumption into a structured personal knowledge base. By simply texting a video link to a bot, our automated ETL (Extract, Transform, Load) pipeline instantly scrapes the metadata, leverages AI to contextually categorize the content, and pushes it to a searchable, custom-built web dashboard. No manual data entry required.
+
 An end-to-end, fully automated backend pipeline that scrapes Instagram Reels, uses AI to categorize the vibe, and seamlessly pushes the data to a live, searchable public dashboard. 
 
 ## 🔗 Important Links
