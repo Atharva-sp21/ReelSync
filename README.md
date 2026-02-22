@@ -1,6 +1,5 @@
 # 🚀 ReelSync: AI-Powered Social Curation Pipeline
 
-![Hackathon Submission](https://img.shields.io/badge/Hackathon-Submission-blue?style=for-the-badge&logo=hackaday)
 ![n8n](https://img.shields.io/badge/n8n-FF6D5A?style=for-the-badge&logo=n8n&logoColor=white)
 ![OpenAI](https://img.shields.io/badge/OpenAI-412991?style=for-the-badge&logo=openai&logoColor=white)
 ![Airtable](https://img.shields.io/badge/Airtable-18BFFF?style=for-the-badge&logo=airtable&logoColor=white)
