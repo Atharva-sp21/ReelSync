@@ -10,8 +10,6 @@
 
 **The Solution:** ReelSync transforms chaotic social media consumption into a structured personal knowledge base. By simply texting a video link to a bot, our automated ETL (Extract, Transform, Load) pipeline instantly scrapes the metadata, leverages AI to contextually categorize the content, and pushes it to a searchable, custom-built web dashboard. No manual data entry required.
 
-An end-to-end, fully automated backend pipeline that scrapes Instagram Reels, uses AI to categorize the vibe, and seamlessly pushes the data to a live, searchable public dashboard. 
-
 ## 🔗 Important Links
 
 * **🌐 Live Dashboard:** [View the Softr App](https://linnea14161.softr.app)
