@@ -1,0 +1,341 @@
+{
+  "name": "Whatsaap_Bot",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "whatsapp-receiver",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "fea8e0b1-79f2-45fb-b1b5-eaa4c4fe469e",
+      "name": "Webhook",
+      "webhookId": "155a8065-6da5-4715-80bc-ae0c133acda4"
+    },
+    {
+      "parameters": {
+        "from": "whatsapp:+14155238886",
+        "to": "={{ $('Webhook').item.json.body.From }}",
+        "message": "Got your link! Give me a second to process it and save it to your dashboard.",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.twilio",
+      "typeVersion": 1,
+      "position": [
+        240,
+        -208
+      ],
+      "id": "cdb72aaa-58e1-45f8-ab4e-2c2ebfb42460",
+      "name": "Send an SMS/MMS/WhatsApp message",
+      "credentials": {
+        "twilioApi": {
+          "id": "Rh90l4W4O5re1Oyz",
+          "name": "Twilio account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://instagram-scraper-stable-api.p.rapidapi.com/get_media_data_v2.php",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "media_code",
+              "value": "={{ $('Webhook').item.json.body.Body.match(/\\/(?:p|reel|reels)\\/([^\\/\\?]+)/)[1] }}"
+            },
+            {
+              "name": "type",
+              "value": "url"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-rapidapi-host",
+              "value": "instagram-scraper-stable-api.p.rapidapi.com"
+            },
+            {
+              "name": "x-rapidapi-key",
+              "value": "9c433743f1msh820707ae47a86b9p1bc880jsnb4904343b797"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "text"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        272,
+        96
+      ],
+      "id": "4164235a-fcfd-430b-b898-c6da4652e659",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e5355877-af47-46ab-a1bb-15b29bc59bfc",
+              "name": "IncomingMessage",
+              "value": "={{ $('Webhook').item.json.body.Body }}",
+              "type": "string"
+            },
+            {
+              "id": "9efbd2cb-a38a-4b6a-9b6d-fd48d74cc147",
+              "name": "SenderNumber",
+              "value": "={{ $('Webhook').item.json.body.From }}",
+              "type": "string"
+            },
+            {
+              "id": "5b051aaf-8a2f-48a7-aa55-85032d933f57",
+              "name": "URL",
+              "value": "={{ $('Webhook').item.json.body.Body }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        576,
+        -48
+      ],
+      "id": "2a2d47f6-bd15-479b-9439-d91972bbb6d5",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Read this Instagram caption and reply with exactly two things: \nA single 1-word category (e.g., Tech, Comedy, Motivation). \nA 1-sentence summary of the vibe.\n\nCAPTION:\n{{ JSON.parse($('HTTP Request').item.json.data.split('---')[0])?.data?.xdt_shortcode_media?.edge_media_to_caption?.edges[0]?.node?.text || 'No caption found' }}",
+        "messages": {
+          "messageValues": [
+            {
+              "type": "HumanMessagePromptTemplate",
+              "message": "="
+            }
+          ]
+        },
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        784,
+        0
+      ],
+      "id": "d978cce9-c660-465a-8186-0d1f13e0d816",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-3.5-turbo",
+        "options": {
+          "maxTokens": 200
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        720,
+        208
+      ],
+      "id": "85251208-8b7e-4e6c-b63e-80bd607f1d26",
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "3l75IFXjaAHWRVci",
+          "name": "OpenRouter account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "appFXWthztpPcnsnB",
+          "mode": "list",
+          "cachedResultName": "Untitled Base",
+          "cachedResultUrl": "https://airtable.com/appFXWthztpPcnsnB"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tbl80RN6O9enR1yaq",
+          "mode": "list",
+          "cachedResultName": "Saved Social Media Posts",
+          "cachedResultUrl": "https://airtable.com/appFXWthztpPcnsnB/tbl80RN6O9enR1yaq"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "URL": "={{ $('Webhook').item.json.body.Body }}",
+            "Caption": "={{ JSON.parse($('HTTP Request').item.json.data)?.data?.xdt_shortcode_media?.edge_media_to_caption?.edges[0]?.node?.text || 'No caption found for this Reel' }}",
+            "Summary": "={{ $json.text }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "URL",
+              "displayName": "URL",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Caption",
+              "displayName": "Caption",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Category",
+              "displayName": "Category",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Summary",
+              "displayName": "Summary",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        1088,
+        0
+      ],
+      "id": "0156cef3-336b-4a88-aff2-51da6a085de2",
+      "name": "Create a record",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "aJAfALtUm1wImpif",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Send an SMS/MMS/WhatsApp message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send an SMS/MMS/WhatsApp message": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Create a record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "86d5319e-636d-4169-b444-02785b82d2de",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "2a3a7e86a1773adf50195c7b45f69fd58d4fa0fff073e0ae468a27476a082f01"
+  },
+  "id": "JyfCA1wbzb4yGJItyKOPp",
+  "tags": []
+}
